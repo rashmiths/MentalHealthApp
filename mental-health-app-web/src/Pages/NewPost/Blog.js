@@ -1,17 +1,31 @@
+import { useState } from 'react';
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
+import firestore, { auth } from '../../firebaseConfig';
 
 const mdParser = new MarkdownIt();
 
-function handleEditorChange({ html, text }) {
-  console.log(`Text Changed!!\nHTML:\n${html}\nText:\n${text}`);
-}
+export default function Blog()  {
+  const [content, setContent] = useState("");
+  const postsRef = firestore.collection('posts');
+  const handleEditorChange = ({ text }) => setContent(text);
 
-export default Blog = () => {
+  const handleSubmitBlog = async () => {
+    const { uid } = auth.currentUser;
+    const post = {
+      createdAt: Date(),
+      author: uid,
+      content,
+      type: 'blog'
+    }
+    console.log("Posting: ", post);
+    // await postsRef.add(post)
+  }
+
   return (
     <div className="main">
-      <h1>this is navbar</h1>
+      <button onClick={handleSubmitBlog}>finish</button>
       <div className="md-editor-wrapper">
         <MdEditor
           htmlClass="md-html"
