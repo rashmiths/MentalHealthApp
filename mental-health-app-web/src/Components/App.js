@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-// import NewPost from './Pages/NewPost';
+import NewPost from './Pages/NewPost';
 import Home from './Pages/Home';
 import SignIn from './Pages/SignIn';
 import SignUp from './Pages/SignUp';
@@ -16,7 +16,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/sign_in" element={<SignIn />} />
             <Route path="/sign_up" element={<SignUp />} />
-            {/* <Route path="new/*" element={<NewPost />} /> */}
+            <Route path="new/*" element={<NewPost />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
