@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">853014821948-0r3da0i24csf96e7g8g9re6egg6be4ag.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">853014821948</string>
+    <string name="google_api_key" translatable="false">AIzaSyB1PKXE1zdnqcG1Worzzj3lFDtxLpo-fG0</string>
+    <string name="google_app_id" translatable="false">1:853014821948:android:cb9949fd69c9dc136bd739</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyB1PKXE1zdnqcG1Worzzj3lFDtxLpo-fG0</string>
+    <string name="google_storage_bucket" translatable="false">mental-health-app-e2112.appspot.com</string>
+    <string name="project_id" translatable="false">mental-health-app-e2112</string>
+</resources>
