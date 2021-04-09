@@ -9,14 +9,19 @@ class Post {
   String type;
   String createdAt;
   String desc;
-  Post(
-      {@required this.authorId,
-      @required this.title,
-      @required this.authorName,
-      @required this.content,
-      @required this.type,
-      @required this.createdAt,
-      @required this.desc});
+  String displayImage;
+  String tag;
+  Post({
+    @required this.authorId,
+    @required this.title,
+    @required this.authorName,
+    @required this.content,
+    @required this.type,
+    @required this.createdAt,
+    @required this.desc,
+    @required this.tag,
+    @required this.displayImage,
+  });
 }
 
 class Posts with ChangeNotifier {
@@ -33,7 +38,7 @@ class Posts with ChangeNotifier {
     return [..._posts];
   }
 
-  Future<void> fetchAndSetPosts() async {
+  Future<List<Post>> fetchAndSetPosts() async {
     try {
       // final response = await http.get(url);
       // final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -68,13 +73,16 @@ class Posts with ChangeNotifier {
               content: data['content'],
               type: data['type'],
               createdAt: data['createdAt'],
-              desc: data['description']));
+              desc: data['description'],
+              tag: data['tag'],
+              displayImage: data['display_image']));
         });
       });
       _posts = loadedProducts;
       print('@@@@@@@@@@');
       print(_posts[0].authorName);
       notifyListeners();
+      return loadedProducts;
     } catch (error) {
       throw (error);
     }

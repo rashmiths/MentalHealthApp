@@ -1,16 +1,13 @@
-import 'package:MentalHealthApp/providers/posts.dart';
-import 'package:MentalHealthApp/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
-
-String description =
-    "Brown, well groomed hair almost fully covers a strong, cheerful face. Woeful aquamarine eyes, set appealingly within their sockets, watch energetically over the rivers they've shown mercy on for so long.";
+import 'package:google_fonts/google_fonts.dart';
 
 class BlogDetails extends StatelessWidget {
-  final Post blog;
+  final content;
+  final tag;
 
-  const BlogDetails(this.blog);
+  const BlogDetails(this.content, this.tag);
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -46,40 +43,15 @@ class BlogDetails extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
-                    'D e s i g n',
-                    style: TextStyle(fontSize: 10),
+                    tag,
+                    style: TextStyle(fontSize: 15),
                   ),
                 ),
-                // Container(
-                //   padding: EdgeInsets.all(8),
-                //   child: Text(
-                //     blog.title,
-                //     style: TextStyle(fontSize: 30),
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 15.0),
-                //   child: Align(
-                //     alignment: Alignment.center,
-                //     child: ClipRRect(
-                //       borderRadius: BorderRadius.all(
-                //         Radius.circular(20),
-                //       ),
-                //       child: Image.network(
-                //         defaultImage,
-                //         height: 300,
-                //         width: 300,
-                //         fit: BoxFit.cover,
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 Container(
                     padding: EdgeInsets.all(20),
                     child: Html(
-                      style:{ "body":Style(),
-                      },
-                      data: blog.content,
+                      style: {"p": Style(fontSize: FontSize.xxLarge)},
+                      data: content,
                     )),
               ],
             )

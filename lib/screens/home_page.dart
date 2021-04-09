@@ -5,6 +5,7 @@ import 'package:MentalHealthApp/screens/profilescreen.dart';
 import 'package:MentalHealthApp/widgets/event_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 String defaultImage =
     "https://images.unsplash.com/photo-1534723328310-e82dad3ee43f?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=676&q=80";
@@ -42,40 +43,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  var _isLoading = true;
+  var _isLoading = false;
   var _error = false;
   var _isInit = true;
 
   @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      print("YESSSSSSSSSSSSS#######");
-      Provider.of<Posts>(context).fetchAndSetPosts().then((value) {
-        setState(() {
-          _isLoading = false;
-        });
-      }).catchError((error) {
-        print(error);
-        setState(() {
-          _error = true;
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    print(_isLoading);
-    final test = Provider.of<Posts>(context, listen: false);
-    final List<Post> posts = test.posts;
-
     final TabController _tabController = TabController(length: 2, vsync: this);
+
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -83,117 +58,129 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             Container(
               color: Colors.amber[100],
             ),
-            _isLoading
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Column(
+            Column(
+              children: [
+                //TITLE OF THE PAGE
+
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text(
+                            'Blogs',
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (ctx) => ProfileScreen()));
+                          },
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(
+                                'https://images.unsplash.com/photo-1554126807-6b10f6f6692a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                Container(
+                  margin: EdgeInsets.only(top: 20),
+                  child: SafeArea(
+                    child: TabBar(
+                      controller: _tabController,
+                      unselectedLabelColor: Colors.grey,
+                      labelColor: Colors.blue[800],
+                      labelPadding: EdgeInsets.only(bottom: 4),
+                      indicatorColor: Colors.blue[800],
+                      indicatorPadding: EdgeInsets.symmetric(horizontal: 10),
+                      tabs: [
+                        Text('All'),
+                        Text('Trending'),
+                        // Text('Upcoming'),
+                        // Text('Completed'),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
                     children: [
-                      //TITLE OF THE PAGE
-
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(30)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Text(
-                                  'Blogs',
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (ctx) => ProfileScreen()));
-                                },
-                                child: CircleAvatar(
-                                  radius: 30,
-                                  backgroundImage: NetworkImage(
-                                      'https://images.unsplash.com/photo-1554126807-6b10f6f6692a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      Container(
-                        margin: EdgeInsets.only(top: 20),
-                        child: SafeArea(
-                          child: TabBar(
-                            controller: _tabController,
-                            unselectedLabelColor: Colors.grey,
-                            labelColor: Colors.blue[800],
-                            labelPadding: EdgeInsets.only(bottom: 4),
-                            indicatorColor: Colors.blue[800],
-                            indicatorPadding:
-                                EdgeInsets.symmetric(horizontal: 10),
-                            tabs: [
-                              Text('All'),
-                              Text('Trending'),
-                              // Text('Upcoming'),
-                              // Text('Completed'),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: TabBarView(
-                          controller: _tabController,
-                          children: [
-                            //THE ALL TAB
-                            Padding(
-                              padding: const EdgeInsets.only(top: 25.0),
-                              child: ListView.builder(
-                                itemBuilder: (context, index) {
-                                  return Column(
-                                    children: [
-                                      ListTile(
-                                        onTap: () => Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (ctx) =>
-                                                  BlogDetails(posts[index])
-                                              // EventsDetailPage(
-                                              //     news: widget.events[index]),
-                                              ),
-                                        ),
-                                        leading: ClipRRect(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10),
+                      StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('posts')
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError)
+                            return Text('Error: ${snapshot.error}');
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return Center(child: CircularProgressIndicator());
+                            default:
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 25.0),
+                                child: ListView.builder(
+                                  itemBuilder: (context, index) {
+                                    return Column(
+                                      children: [
+                                        ListTile(
+                                          onTap: () =>
+                                              Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (ctx) => BlogDetails(
+                                                    snapshot.data.docs[index]
+                                                        ['content'],
+                                                    snapshot.data.docs[index]
+                                                        ['tag'])
+                                                // EventsDetailPage(
+                                                //     news: widget.events[index]),
+                                                ),
                                           ),
-                                          child: Image.network(
-                                            events[index].imgUrl,
-                                            height: 200,
-                                            width: 70,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        title: Text(
-                                          posts[index].title,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        subtitle: Wrap(
-                                          // mainAxisSize: MainAxisSize.min,
-                                          // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                          alignment: WrapAlignment.spaceBetween,
-                                          direction: Axis.horizontal,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(0.0),
-                                              child: Text(posts[index].desc),
+                                          leading: ClipRRect(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10),
                                             ),
-                                            if (events[index].isLatest)
+                                            child: Image.network(
+                                              snapshot.data.docs[index]
+                                                  ['display_image'],
+                                              height: 200,
+                                              width: 70,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          title: Text(
+                                            snapshot.data.docs[index]['title'],
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          subtitle: Wrap(
+                                            // mainAxisSize: MainAxisSize.min,
+                                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                            alignment:
+                                                WrapAlignment.spaceBetween,
+                                            direction: Axis.horizontal,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(0.0),
+                                                child: Text(
+                                                    snapshot.data.docs[index]
+                                                        ['description']),
+                                              ),
                                               Card(
                                                   //elevation: 2,
                                                   color: Colors.green[50],
@@ -207,7 +194,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                         const EdgeInsets.all(
                                                             4.0),
                                                     child: Text(
-                                                      'Trending',
+                                                      snapshot.data.docs[index]
+                                                          ['tag'],
                                                       style: TextStyle(
                                                           color:
                                                               Colors.green[700],
@@ -215,23 +203,30 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                               FontWeight.bold),
                                                     ),
                                                   ))
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Divider()
-                                    ],
-                                  );
-                                },
-                                itemCount: posts.length,
-                              ),
-                            ),
-                            //REGULAR TABS
-                            tabs(trendingEvents, 'Trending'),
-                          ],
-                        ),
-                      )
+                                        Divider(),
+                                        SizedBox(
+                                          height: 10,
+                                        )
+                                      ],
+                                    );
+                                  },
+                                  itemCount: snapshot.data.docs.length,
+                                ),
+                              );
+                          }
+                        },
+                      ),
+
+                      //REGULAR TABS
+                      tabs(trendingEvents, 'Trending'),
                     ],
                   ),
+                )
+              ],
+            ),
           ],
         ),
       ),
