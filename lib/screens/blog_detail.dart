@@ -2,6 +2,7 @@ import 'package:MentalHealthApp/providers/posts.dart';
 import 'package:MentalHealthApp/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 
 String description =
     "Brown, well groomed hair almost fully covers a strong, cheerful face. Woeful aquamarine eyes, set appealingly within their sockets, watch energetically over the rivers they've shown mercy on for so long.";
@@ -76,7 +77,8 @@ class BlogDetails extends StatelessWidget {
                 Container(
                     padding: EdgeInsets.all(20),
                     child: Html(
-                      style:{ },
+                      style:{ "body":Style(),
+                      },
                       data: blog.content,
                     )),
               ],
