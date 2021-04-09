@@ -4,7 +4,7 @@ import Home from "./Pages/Home";
 import SignIn from "./Pages/SignIn";
 import SignUp from "./Pages/SignUp";
 import AuthProvider from "../Context/AuthContext";
-import Nav from "./Shared/Nav";
+import Nav from "./Shared/NavBar/Header";
 
 function App() {
     return (
