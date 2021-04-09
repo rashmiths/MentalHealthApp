@@ -22,6 +22,7 @@ import {
     Image,
     Spinner,
     Select,
+    Center,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router";
 import "./editor.scss";
@@ -102,7 +103,7 @@ export default function Blog() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [display_image, setDisplay_image] = useState(null);
-    const display_image_load_state = useRef(0);
+    const [display_image_load_state, setLoadState] = useState(0);
     const [tag, setTag] = useState("");
     const { currentUser } = useAuth();
     const toast = useToast();
@@ -110,7 +111,7 @@ export default function Blog() {
     const onDrop = useCallback((acceptedFiles) => {
         const file = acceptedFiles[0];
         let storageRef = storage.ref();
-        display_image_load_state.current = 1;
+        setLoadState(1);
         let uploadTask = storageRef.child(file.name).put(file);
         uploadTask.on(
             firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
@@ -150,7 +151,7 @@ export default function Blog() {
                         break;
                     default: {
                         const toastID = "img-upload-fail";
-                        display_image_load_state=0;
+                        setLoadState(0);
                         if (!toast.isActive(toastID)) {
                             toast({
                                 id: toastID,
@@ -171,7 +172,7 @@ export default function Blog() {
                     .getDownloadURL()
                     .then(function (downloadURL) {
                         // console.log("File available at", downloadURL);
-                        display_image_load_state = 2;
+                        setLoadState(2);
                         setDisplay_image(downloadURL);
                     });
             }
@@ -277,7 +278,13 @@ export default function Blog() {
                                 </Box>
                             )}
                             {display_image_load_state === 1 && (
-                                <Spinner color="gray.400" />
+                                <Center>
+                                    <Spinner
+                                        my={"auto"}
+                                        mx={4}
+                                        color="gray.400"
+                                    />
+                                </Center>
                             )}
                             {display_image_load_state === 2 && (
                                 <Image
